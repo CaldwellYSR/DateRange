@@ -11,6 +11,10 @@ var DateRange = function(date, dayNum, country, errors, apiKey) {
     this.xhr = new XMLHttpRequest();
     this.xhr.onreadystatechange = this.catchResponse.bind(this);
 
+    this.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    this.days = ["S", "M", "T", "W", "T", "F", "S"];
+    this.daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
     this.validCountries = [
         "BE", "BG", "BR", "CA", "DE", 
         "ES", "FR", "GB", "GT", "HR", 
@@ -24,9 +28,65 @@ var DateRange = function(date, dayNum, country, errors, apiKey) {
 
 };
 
+/**
+ * Calendar Functions
+ */
 DateRange.prototype.renderCalendar = function(holidays) {
-    
+    var html = "";
+    var firstDay;
+    for (var year = this.date.getUTCFullYear(); year <= parseInt(this.endDate.getUTCFullYear(), 10); year = parseInt(year, 10) + 1) {
+        for (var month = this.date.getUTCMonth(); month < 12; month = parseInt(month, 10) + 1) {
+            firstDay = new Date(year, month, 1);
+            html += this.getMonthHTML(firstDay, month, year);
+            if (year == parseInt(this.endDate.getUTCFullYear(), 10) && month == parseInt(this.endDate.getUTCMonth())) {
+                break;
+            }
+        }
+    }
+    document.getElementById("output").innerHTML = html;
 };
+
+DateRange.prototype.getMonthHTML = function(firstDay, month, year) {
+    var startingDay = firstDay.getDay();
+    var monthLength = this.daysInMonth[month];
+    var monthName = this.months[month];
+    var html = "<table class='calendar_month'><thead>";
+    html += "<tr class='calendar_days'>";
+    for (var i = 0; i < this.days.length; i++) {
+        html += "<th class='calendar_day_label'>";
+        html += this.days[i];
+        html += "</th>";
+    }
+    html += "</tr>";
+    html += "<tr><th colspan='7'>";
+    html += monthName + " " + year;
+    html += "</th></tr></thead>";
+    var day = 1;
+    var currentDate;
+    html += "<tr>";
+    for (var i = 0; i < 9; i++) {
+        for (var j = 0; j <= 6; j++) {
+            currentDate = new Date(year + "-" + month + "-" + day);
+            html += "<td class='calendar_day";
+            if (j == 0 || j == 6) {
+                html += " weekend";
+            }
+            html += "'>";
+            if (day <= monthLength && (i > 0 || j >= startingDay)) {
+                html += day++;
+            }
+            html += "</td>";
+        }
+        if (day > monthLength) {
+            break;
+        } else {
+            html += "</tr><tr>";
+        }
+    }
+    html += "</tr>";
+    html += "</table>";
+    return html;
+}
 
 /**
  * HTTP Request Functions
@@ -36,6 +96,7 @@ DateRange.prototype.catchResponse = function() {
         return;
     }
     if (this.xhr.status === 200) {
+        this.renderCalendar(this.xhr.response);
     }
 };
 

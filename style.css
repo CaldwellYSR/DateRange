@@ -16,3 +16,20 @@ button, input {
     font-style: italic;
     text-align: center;
 }
+.calendar_month {
+    border-collapse: collapse;
+    float: left;
+    margin: 1rem;
+    min-height: 175px;
+}
+.calendar_month .calendar_day {
+    background: #bbb;
+    border: 2px solid white;
+}
+.calendar_month .calendar_day.blocked {
+    background: #bbb;
+    color: transparent;
+}
+.calendar_month .calendar_day.weekend {
+    background: yellow;
+}
