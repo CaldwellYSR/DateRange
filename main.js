@@ -1,9 +1,14 @@
 var DateRange = function(date, dayNum, country, errors, apiKey) {
+
     this.date = date;
     this.dayNum = dayNum;
     this.country = country;
     this.errors = errors;
     this.apiKey = apiKey;
+
+    this.xhr = new XMLHttpRequest();
+    this.xhr.onreadystatechange = this.catchResponse.bind(this);
+
     this.validCountries = [
         "BE", "BG", "BR", "CA", "DE", 
         "ES", "FR", "GB", "GT", "HR", 
@@ -11,7 +16,39 @@ var DateRange = function(date, dayNum, country, errors, apiKey) {
         "NO", "PL", "PR", "SI", "SK", "US"
     ];
     this.country.addEventListener("keyup", this.validateCountryCode.bind(this));
+    document.getElementById("submit").addEventListener("click", this.sendRequest.bind(this));
+
 };
+
+/**
+ * HTTP Request Functions
+ */
+DateRange.prototype.catchResponse = function() {
+    if (this.xhr.readyState !== XMLHttpRequest.DONE) {
+        return;
+    }
+    if (this.xhr.status === 200) {
+        console.log(this.xhr.response);
+    }
+}
+
+DateRange.prototype.sendRequest = function(e) {
+    if (!this.validateData()) {
+        this.errors.innerHTML
+        return;
+    }
+    var xhrUrl = "https://holidayapi.com/v1/holidays?key=" + this.apiKey + "&country=" + this.country.value + "&year=2008";
+    this.xhr.open("GET", xhrUrl, true);
+    this.xhr.send();
+}
+
+/**
+ * Validation Functions
+ */
+DateRange.prototype.validateData = function() {
+    // TODO Lets actually validate the input
+    return true;    
+}
 
 DateRange.prototype.validateCountryCode = function(e) {
     e.target.value = e.target.value.toUpperCase();
