@@ -1,4 +1,4 @@
-input {
+button, input {
     display: block;
     font-size: 1.25rem;
     margin: 1rem auto;
@@ -10,4 +10,9 @@ input {
     margin: 1rem auto;
     max-width: 1280px;
     width: 100%;
+}
+.errors {
+    color: red;
+    font-style: italic;
+    text-align: center;
 }

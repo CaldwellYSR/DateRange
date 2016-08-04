@@ -9,9 +9,11 @@
     <link href="style.css" rel="stylesheet" />
 </head>
 <body>
+    <p id="errors" class="errors"></p>
     <input type="date" name="date" id="date" placeholder="01/01/2008" />
-    <input type="number" name="dayNum" min="1" step="1" placeholder="Number of Days to Show" />
-    <input type="text" name="country" placeholder="Country Code: (US)" />
+    <input type="number" id="dayNum" name="dayNum" min="1" step="1" placeholder="Number of Days to Show" />
+    <input type="text" id="country" name="country" placeholder="Country Code: (US)" />
+    <button id="submit">Go</button>
     <div class="output"></div>
     <script src="main.js"></script>
 </body>
